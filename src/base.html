@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +7,23 @@
     <title>JS - Canvas - Base</title>
     <!-- <script src="./01base.js"></script> -->
     <!-- <script src="./02draw.js"></script> -->
-    <script src="./03fresh.js"></script>
+    <!-- <script src="./03fresh.js"></script> -->
+    <script src="./04text.js"></script>
+    <style>
+        .text-style {
+            float: left;
+            position: absolute;
+            font: 28px orbitron;
+            word-break: break-all;
+            background-color: transparent;
+            resize: none;
+            /* display:none; */
+            z-index: 1;
+        }
+    </style>
 </head>
-<body>
-    <canvas id="canvas" width="800" height="600" style="background-color: #fff">抱歉，您的浏览器不支持canvas元素</canvas>
+<body style="background-color: #999">
+    <canvas id="canvas" width="800" height="600" style="background-color: #fff; float: left; position: absolute; z-index: 5;">抱歉，您的浏览器不支持canvas元素</canvas>
+    <textarea name="textBox" id="textBox" cols="30" rows="10" class="text-style"></textarea>
 </body>
 </html>

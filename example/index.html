@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JS - Canvas - Final</title>
+    <style>
+        .canvas-style {
+            background-color: #fff;
+            float: left;
+            position: absolute;
+            z-index: 5;
+        }
+
+        .text-style {
+            float: left;
+            position: absolute;
+            font: 28px orbitron;
+            word-break: break-all;
+            background-color: transparent;
+            resize: none;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body style="background-color: cadetblue">
+    <div>
+        <input type="button" value="矩形" onclick="drawRect()">
+        <input type="button" value="空心矩形" onclick="drawStrokeRect()">
+        <input type="button" value="圆" onclick="drawCircle()">
+        <input type="button" value="空心圆" onclick="drawStrokeCircle()">
+        <input type="button" value="直线" onclick="drawLine()">
+        <input type="button" value="箭头" onclick="drawArrow()">
+        <input type="button" value="文字" onclick="drawText()">
+    </div>
+    <canvas id="canvas" width="800" height="600" class="canvas-style">抱歉，您的浏览器不支持canvas元素</canvas>
+    <textarea name="textBox" id="textBox" cols="30" rows="10" class="text-style"></textarea>
+</body>
+
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var textBox = document.getElementById("textBox");
+        var showInputFlag = false;
+        var textContent = "";
+
+        if (canvas.getContext) {
+            var context = canvas.getContext('2d');  //2d用单引用括起来
+        }
+
+        canvas.drawing = function (x1, y1, x2, y2, e) {
+            let self = this;
+            if (!context) {
+                return;
+            } else {
+                // 设置画笔的颜色和大小
+                context.fillStyle = "red";  // 填充颜色为红色
+                context.strokeStyle = "blue";  // 画笔的颜色
+                context.lineWidth = 5;  // 指定描边线的宽度
+
+                context.save();
+                context.beginPath();
+
+                if (self.rectFlag) {
+                    // console.log('画矩形');
+                    self.initCanvas();
+                    if (e.shiftKey === true) {
+                        // 正方形
+                        let d = ((x2 - x1) < (y2 -y1)) ? (x2 - x1) : (y2 - y1);
+                        context.fillRect(x1, y1, d, d);
+                    } else {
+                        // 普通方形
+                        context.fillRect(x1, y1, x2 - x1, y2 - y1);
+                    }
+                } else if (self.strokeRectFlag) {
+                    // console.log('画空心矩形')
+                    self.initCanvas();
+                    if (e.shiftKey === true) {
+                        // 正方形
+                        let d = ((x2 - x1) < (y2 -y1)) ? (x2 - x1) : (y2 - y1);
+                        context.strokeRect(x1, y1, d, d);
+                    } else {
+                        // 普通方形
+                        context.strokeRect(x1, y1, x2 - x1, y2 - y1);
+                    }
+                } else if (self.circleFlag) {
+                    // console.log('画圆形')
+                    self.initCanvas();
+                    let k = ((x2 - x1) / 0.55);
+                    let w = (x2 - x1) / 2;
+                    let h = (y2 - y1) / 2;
+
+                    if (e.shiftKey === true) {
+                        // circle
+                        let r = Math.sqrt(w * w + h * h);
+                        context.arc(w + x1, h + y1, r, 0, Math.PI * 2);
+                    } else {
+                        // ellipse
+                        // bezier double ellipse algorithm
+                        context.moveTo(x1, y1 + h);
+                        context.bezierCurveTo(x1, y1 + h * 3, x1 + w * 11 / 5, y1 + h * 3, x1 + w * 11 / 5, y1 + h);
+                        context.bezierCurveTo(x1 + w * 11 / 5, y1 - h, x1, y1 - h, x1, y1 + h);
+                    }
+                    context.fill();
+                } else if (self.strokeCircelFlag) {
+                    // console.log('画空心圆形')
+                    self.initCanvas();
+                    let k = ((x2 - x1) / 0.55);
+                    let w = (x2 - x1) / 2;
+                    let h = (y2 - y1) / 2;
+
+                    if (e.shiftKey === true) {
+                        // circle
+                        let r = Math.sqrt(w * w + h * h);
+                        context.arc(w + x1, h + y1, r, 0, Math.PI * 2);
+                    } else {
+                        // ellipse
+                        // bezier double ellipse algorithm
+                        context.moveTo(x1, y1 + h);
+                        context.bezierCurveTo(x1, y1 + h * 3, x1 + w * 11 / 5, y1 + h * 3, x1 + w * 11 / 5, y1 + h);
+                        context.bezierCurveTo(x1 + w * 11 / 5, y1 - h, x1, y1 - h, x1, y1 + h);
+                    }
+                    context.stroke();
+                } else if (self.lineFlag) {
+                    // console.log('画直线')
+                    self.initCanvas();
+                    context.moveTo(x1, y1);
+                    context.lineTo(x2, y2);
+                    context.stroke();
+                } else if (self.arrowFlag) {
+                    // console.log('画箭头')
+                    self.initCanvas();
+                    context.moveTo(x1, y1);
+                    context.lineTo(x2, y2);
+                    context.stroke();
+                    let endRadians = Math.atan((y2 - y1) / (x2 - x1));
+                    endRadians += ((x2 >= x1) ? 90 : -90) * Math.PI / 180;
+                    context.translate(x2, y2);
+                    context.rotate(endRadians);
+                    context.moveTo(0,  -2 * context.lineWidth);
+                    context.lineTo(2 * context.lineWidth, 3 * context.lineWidth);
+                    context.lineTo(-2 * context.lineWidth, 3 * context.lineWidth);
+                    context.fillStyle = context.strokeStyle;
+                    context.fill();
+
+                } else if (self.textFlag) {
+                    // console.log('画文字')
+                    context.font = "28px orbitron";
+                    context.fillText(textContent, parseInt(textBox.style.left), parseInt(textBox.style.top));
+                } else {
+                    // console.log('随心画')
+                    context.moveTo(x1, y1);
+                    context.lineTo(x2, y2);
+                    context.stroke();
+
+                    self.X1 = self.X2;
+                    self.Y1 = self.Y2;
+                }
+
+                context.restore();
+                context.closePath();
+            }
+        };
+
+        canvas.onmousedown = function mouseDownAction(e) {
+            let self = this;
+            self.X1 = e.offsetX;
+            self.Y1 = e.offsetY;
+            if (canvas.textFlag) {
+                if (showInputFlag) {
+                    textContent = textBox.value;
+                    showInputFlag = false;
+                    textBox.style['z-index'] = 1;
+                    textBox.value = "";
+                    this.drawing(this.X1, this.Y1);
+                } else {
+                    showInputFlag = true
+                    textBox.style.left = this.X1 + 'px';
+                    textBox.style.top = this.Y1 + 'px';
+                    textBox.style['z-index'] = 6;
+                }
+            } else {
+                self.isMouseDown = true;
+                self.loadImage();
+            }
+        };
+
+        canvas.onmousemove = function mouseMoveAction(e) {
+            let self = this;
+            if (self.isMouseDown) {
+                self.X2 = e.offsetX;
+                self.Y2 = e.offsetY;
+                self.drawing(self.X1, self.Y1, self.X2, self.Y2, e);
+            }
+        };
+
+        canvas.onmouseup = function mouseUpAction(e) {
+            let self = this;
+            self.lastImage = canvas.toDataURL('image/png');
+            self.isMouseDown = false;
+        };
+
+        canvas.loadImage = function () {
+            let self = this;
+            let img = new Image();
+            img.src = self.lastImage;
+            context.drawImage(img, 0, 0, canvas.width, canvas.height);
+        }
+
+        canvas.initCanvas = function () {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            canvas.loadImage();
+        }
+    };
+
+    var initDraw = function () {
+        canvas.rectFlag = false;
+        canvas.strokeRectFlag = false;
+        canvas.circleFlag = false;
+        canvas.strokeCircelFlag = false;
+        canvas.lineFlag = false;
+        canvas.arrowFlag = false;
+        canvas.textFlag = false;
+    };
+
+    var drawRect = function () {
+        initDraw();
+        canvas.rectFlag = true;
+    };
+
+    var drawStrokeRect = function () {
+        initDraw();
+        canvas.strokeRectFlag = true;
+    };
+
+    var drawCircle = function () {
+        initDraw();
+        canvas.circleFlag = true;
+    };
+
+    var drawStrokeCircle = function () {
+        initDraw();
+        canvas.strokeCircelFlag = true;
+    };
+
+    var drawLine = function () {
+        initDraw();
+        canvas.lineFlag = true;
+    }
+
+    var drawArrow = function () {
+        initDraw();
+        canvas.arrowFlag = true;
+    };
+
+    var drawText = function () {
+        initDraw();
+        canvas.textFlag = true;
+    };
+</script>
+
+</html>
