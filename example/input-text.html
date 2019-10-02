@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>JS - Canvas - text</title>
+</head>
+<body style="background-color: #999">
+    <div>
+            <canvas id="canvas" width="800" height="200" style="background-color: #fff">抱歉，您的浏览器不支持canvas元素</canvas>
+    </div>
+    <textarea name="textBox" id="textBox" cols="30" rows="10" class="text-style" onkeyup="setText()"></textarea>
+    <input type="button" value="添加文字" onclick="drawing()">
+</body>
+<script>
+    window.onload = function () {
+        var canvas = document.getElementById("canvas");
+        var textBox = document.getElementById("textBox");
+        var textContent = "";
+
+        if (canvas.getContext) {
+            var context = canvas.getContext("2d");  //2d用引用括起来
+        }
+
+        drawing = function () {
+            if (!context) {
+                return;
+            } else {
+                // 设置画笔的颜色和大小
+                context.fillStyle = "red";  // 填充颜色为红色
+                context.strokeStyle = "blue";  // 画笔的颜色
+                context.lineWidth = 5;  // 指定描边线的宽度
+
+                context.save();
+                context.beginPath();
+
+                // 写字
+                context.font = "28px orbitron";
+                context.fillText(textContent, 10, 50);
+
+                context.restore();
+                context.closePath();
+            }
+
+            // 清空内容
+            textContent = "";
+            textBox.value = "";
+        }
+
+        setText = function () {
+            textContent = textBox.value;
+        }
+    }
+</script>
+</html>
