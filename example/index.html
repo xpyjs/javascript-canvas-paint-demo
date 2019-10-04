@@ -26,13 +26,15 @@
 </head>
 <body style="background-color: cadetblue">
     <div>
-        <input type="button" value="矩形" onclick="drawRect()">
-        <input type="button" value="空心矩形" onclick="drawStrokeRect()">
-        <input type="button" value="圆" onclick="drawCircle()">
-        <input type="button" value="空心圆" onclick="drawStrokeCircle()">
-        <input type="button" value="直线" onclick="drawLine()">
-        <input type="button" value="箭头" onclick="drawArrow()">
-        <input type="button" value="文字" onclick="drawText()">
+        <input id="defaultBtn" type="button" value="随意画" onclick="drawDefault()">
+        <input id="lineBtn" type="button" value="直线" onclick="drawLine()">
+        <input id="arrowBtn" type="button" value="箭头" onclick="drawArrow()">
+        <input id="rectBtn" type="button" value="矩形" onclick="drawRect()">
+        <input id="strokeRectBtn" type="button" value="空心矩形" onclick="drawStrokeRect()">
+        <input id="circleBtn" type="button" value="圆" onclick="drawCircle()">
+        <input id="strokeCircleBtn" type="button" value="空心圆" onclick="drawStrokeCircle()">
+        <input id="textBtn" type="button" value="文字" onclick="drawText()">
+        <input id="eraserBtn" type="button" value="橡皮" onclick="drawEraser()">
     </div>
     <canvas id="canvas" width="800" height="600" class="canvas-style">抱歉，您的浏览器不支持canvas元素</canvas>
     <textarea name="textBox" id="textBox" cols="30" rows="10" class="text-style"></textarea>
@@ -48,6 +50,7 @@
         if (canvas.getContext) {
             var context = canvas.getContext('2d');  //2d用单引用括起来
         }
+
 
         canvas.drawing = function (x1, y1, x2, y2, e) {
             let self = this;
@@ -148,6 +151,14 @@
                     // console.log('画文字')
                     context.font = "28px orbitron";
                     context.fillText(textContent, parseInt(textBox.style.left), parseInt(textBox.style.top));
+                } else if (self.eraserFlag) {
+                    // 橡皮擦
+                    context.arc(x1, y1, 10, 0, 2 * Math.PI);
+                    context.clip();
+                    context.clearRect(0, 0, canvas.width, canvas.height);
+
+                    self.X1 = self.X2;
+                    self.Y1 = self.Y2;
                 } else {
                     // console.log('随心画')
                     context.moveTo(x1, y1);
@@ -174,6 +185,9 @@
                     textBox.style['z-index'] = 1;
                     textBox.value = "";
                     this.drawing(this.X1, this.Y1);
+                    // 绘图后将文本框恢复到原点
+                    textBox.style.left = '30px';
+                    textBox.style.top = '30px';
                 } else {
                     showInputFlag = true
                     textBox.style.left = this.X1 + 'px';
@@ -222,41 +236,91 @@
         canvas.lineFlag = false;
         canvas.arrowFlag = false;
         canvas.textFlag = false;
+        canvas.eraserFlag = false;
+
+        // 默认背景色
+        defaultBtn.style.background = "#fff";
+        lineBtn.style.background = "#fff";
+        arrowBtn.style.background = "#fff";
+        rectBtn.style.background = "#fff";
+        strokeRectBtn.style.background = "#fff";
+        circleBtn.style.background = "#fff";
+        strokeCircleBtn.style.background = "#fff";
+        textBtn.style.background = "#fff";
+        eraserBtn.style.background = "#fff";
+
+        // 默认文字色
+        defaultBtn.style.color = "#000";
+        lineBtn.style.color = "#000";
+        arrowBtn.style.color = "#000";
+        rectBtn.style.color = "#000";
+        strokeRectBtn.style.color = "#000";
+        circleBtn.style.color = "#000";
+        strokeCircleBtn.style.color = "#000";
+        textBtn.style.color = "#000";
+        eraserBtn.style.color = "#000";
+    };
+
+    var drawDefault = function () {
+        initDraw();
+        defaultBtn.style.background = "#22A6F2";
+        defaultBtn.style.color = "#eee";
     };
 
     var drawRect = function () {
         initDraw();
         canvas.rectFlag = true;
+        rectBtn.style.background = "#22A6F2";
+        rectBtn.style.color = "#eee";
     };
 
     var drawStrokeRect = function () {
         initDraw();
         canvas.strokeRectFlag = true;
+        strokeRectBtn.style.background = "#22A6F2";
+        strokeRectBtn.style.color = "#eee";
     };
 
     var drawCircle = function () {
         initDraw();
         canvas.circleFlag = true;
+        circleBtn.style.background = "#22A6F2";
+        circleBtn.style.color = "#eee";
     };
 
     var drawStrokeCircle = function () {
         initDraw();
         canvas.strokeCircelFlag = true;
+        strokeCircleBtn.style.background = "#22A6F2";
+        strokeCircleBtn.style.color = "#eee";
     };
 
     var drawLine = function () {
         initDraw();
         canvas.lineFlag = true;
+        lineBtn.style.background = "#22A6F2";
+        lineBtn.style.color = "#eee";
     }
 
     var drawArrow = function () {
         initDraw();
         canvas.arrowFlag = true;
+        arrowBtn.style.background = "#22A6F2";
+        arrowBtn.style.color = "#eee";
     };
 
     var drawText = function () {
         initDraw();
         canvas.textFlag = true;
+        textBtn.style.background = "#22A6F2";
+        textBtn.style.color = "#eee";
+    };
+
+    var drawEraser = function () {
+        initDraw();
+        canvas.eraserFlag = true;
+        eraserBtn.style.background = "#22A6F2";
+        eraserBtn.style.color = "#eee";
     };
 </script>
 
