@@ -1,5 +1,8 @@
 # JavaScript 之 Canvas
 
+## 示例：
+[https://jeremyjone.github.io/CanvasPaint/example/index.html](https://jeremyjone.github.io/CanvasPaint/example/index.html)，这是一个完整的demo，原码在example中。
+
 ## 介绍
 
 根据该系列，最后成品是这个样子滴：
