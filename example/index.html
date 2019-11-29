@@ -228,7 +228,7 @@
         }
     };
 
-    var initDraw = function () {
+    var initDraw = function (flag) {
         canvas.rectFlag = false;
         canvas.strokeRectFlag = false;
         canvas.circleFlag = false;
@@ -237,6 +237,8 @@
         canvas.arrowFlag = false;
         canvas.textFlag = false;
         canvas.eraserFlag = false;
+
+        canvas[flag] = true;
 
         // 默认背景色
         defaultBtn.style.background = "#fff";
@@ -259,6 +261,12 @@
         strokeCircleBtn.style.color = "#000";
         textBtn.style.color = "#000";
         eraserBtn.style.color = "#000";
+
+        // 设置鼠标样式，默认画笔，如果
+        canvas.style.cursor = "url(../asset/paintbrush.png) 10 10, default";
+        if (canvas.eraserFlag) {
+            canvas.style.cursor = "url(../asset/eraser-20.png) 10 10, default";
+        }
     };
 
     var drawDefault = function () {
@@ -268,57 +276,49 @@
     };
 
     var drawRect = function () {
-        initDraw();
-        canvas.rectFlag = true;
+        initDraw("rectFlag");
         rectBtn.style.background = "#22A6F2";
         rectBtn.style.color = "#eee";
     };
 
     var drawStrokeRect = function () {
-        initDraw();
-        canvas.strokeRectFlag = true;
+        initDraw("strokeRectFlag");
         strokeRectBtn.style.background = "#22A6F2";
         strokeRectBtn.style.color = "#eee";
     };
 
     var drawCircle = function () {
-        initDraw();
-        canvas.circleFlag = true;
+        initDraw("circleFlag");
         circleBtn.style.background = "#22A6F2";
         circleBtn.style.color = "#eee";
     };
 
     var drawStrokeCircle = function () {
-        initDraw();
-        canvas.strokeCircelFlag = true;
+        initDraw("strokeCircelFlag");
         strokeCircleBtn.style.background = "#22A6F2";
         strokeCircleBtn.style.color = "#eee";
     };
 
     var drawLine = function () {
-        initDraw();
-        canvas.lineFlag = true;
+        initDraw("lineFlag");
         lineBtn.style.background = "#22A6F2";
         lineBtn.style.color = "#eee";
     }
 
     var drawArrow = function () {
-        initDraw();
-        canvas.arrowFlag = true;
+        initDraw("arrowFlag");
         arrowBtn.style.background = "#22A6F2";
         arrowBtn.style.color = "#eee";
     };
 
     var drawText = function () {
-        initDraw();
-        canvas.textFlag = true;
+        initDraw("textFlag");
         textBtn.style.background = "#22A6F2";
         textBtn.style.color = "#eee";
     };
 
     var drawEraser = function () {
-        initDraw();
-        canvas.eraserFlag = true;
+        initDraw("eraserFlag");
         eraserBtn.style.background = "#22A6F2";
         eraserBtn.style.color = "#eee";
     };
