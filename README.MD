@@ -2,7 +2,7 @@
 
 ## 示例
 
-[https://jeremyjone.github.io/CanvasPaint/example/index.html](https://jeremyjone.github.io/CanvasPaint/example/index.html)，这是一个完整的 demo，原码在 example 中。
+[demo](https://xpyjs.github.io/javascript-canvas-paint-demo/example/index.html)
 
 ## 介绍
 
